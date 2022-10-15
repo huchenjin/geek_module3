@@ -1,4 +1,4 @@
-FROM golang:go1.18.2 AS build
+FROM golang:1.18.2 AS build
 WORKDIR /httpserver
 COPY .  /httpserver
 ENV CGO_ENABLED=0
