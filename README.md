@@ -1,6 +1,23 @@
 # geek_module3
 
-1. 进入服务器目录，执行 docker image build -t hugh-httpserver:v1 . 构建本地镜像
+Dockerfile内容
+```dockerfile
+FROM golang:1.18.2 AS build
+WORKDIR /httpserver
+COPY .  /httpserver
+ENV CGO_ENABLED=0
+ENV GO111MODULE=on
+ENV GOPROXY=https://goproxy.cn,direct
+RUN cd /httpserver && GOOS=linux go build -installsuffix cgo -o httpserver main.go
+
+FROM ubuntu
+COPY --from=build /httpserver/httpserver /httpserver/httpserver
+EXPOSE 80
+WORKDIR /httpserver/
+ENTRYPOINT ["./httpserver"]
+```
+
+进入服务器目录，执行 docker image build -t hugh-httpserver:v1 . 构建本地镜像
 ```shell
 root@iZ2ze06j2vnul9uxekp3lvZ:/home/geek_module3# docker image build -t hugh-httpserver:v1 .
 Sending build context to Docker daemon  88.06kB
